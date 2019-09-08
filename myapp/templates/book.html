@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+	    
+	<br>
+	<div class="card">
+	  <h5 class="card-header">Book An Event</h5>
+	  <div class="card-body">
+	    <p class="card-text">
+	        <form action="{% url 'book-event' event.id %}" method="POST" enctype="multipart/form-data">
+	            {% csrf_token %}
+	            {{form|crispy}}
+	            <input type="submit" value="Book" class="btn btn-outline-success">
+	        </form>
+	    </p>
+	  </div>
+	</div>
+
+
+
+
+{% endblock content%}

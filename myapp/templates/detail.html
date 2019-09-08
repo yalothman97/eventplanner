@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card text-center" style="margin:70px">
+  <div class="card-header" style="background-color: #e3f2fd; color: 000034;">
+    Event Details
+  </div>
+  <div class="card-body">
+    <h2 class="card-title" style="color: 000034;">{{event.title}}</h2>
+    <h3 class="card-title" style="color: 000034;">{{event.location}}</h3>
+    <h4 class="card-title" style="color: 000034;">{{event.location}} on {{event.date}} - {{event.date}}</h4>
+    <p class="card-text" style="color: 000034;">{{event.description}}</p>
+    <a href="{% url 'update-event' event.id %}"><button>Update</button></a>
+
+  </div>
+</div>
+<ol>
+{%for a in attendance%}
+
+
+	<li>
+	{{a.attendee.username}}
+	{{a.seats_booked}}
+	</li>
+
+
+{%endfor%}
+</ol>
+
+
+{% endblock content%}
