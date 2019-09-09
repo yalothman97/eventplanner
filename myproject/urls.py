@@ -11,8 +11,9 @@ urlpatterns = [
 	path('logout/', views.Logout.as_view(), name='logout'),
 	path('dashboard/', views.dashboard, name='dashboard'),
 	path('dashboard/create/', views.create_event, name='create-event'),
-	path('dashboard/<int:event_id>/', views.event_detail, name='event-detail'),
 	path('dashboard/<int:event_id>/update/', views.update_event, name='update-event'),
 	path('events/<int:event_id>/book/', views.book_event, name='book-event'),
+	path('events/', views.events_list, name='events'),
+	path('events/<int:event_id>/', views.event_detail, name='event-detail'),
 
 ]

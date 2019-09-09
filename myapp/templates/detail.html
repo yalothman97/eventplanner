@@ -9,24 +9,42 @@
   <div class="card-body">
     <h2 class="card-title" style="color: 000034;">{{event.title}}</h2>
     <h3 class="card-title" style="color: 000034;">{{event.location}}</h3>
-    <h4 class="card-title" style="color: 000034;">{{event.location}} on {{event.date}} - {{event.date}}</h4>
+    <h4 class="card-title" style="color: 000034;">{{event.seats_available}} on {{event.date}} - {{event.time}}</h4>
     <p class="card-text" style="color: 000034;">{{event.description}}</p>
+
+
+    {%if request.user == event.organizer  %}
     <a href="{% url 'update-event' event.id %}"><button>Update</button></a>
+    {%endif%}
+    
+    {% if event.seats_available > 0 %}
+    <a href="{% url 'book-event' event.id %}"><button>Book Event</button></a>
+    {%else%}
+    <button disabled="True">Book Event </button>
+    <br>
+    <br>
+    <br>
+    <h2 style="color:red" >FULLY BOOKED</h2>
+
+  
+    {%endif%}
 
   </div>
 </div>
+
+{%if request.user.is_staff and request.user == event.organizer %}
+
 <ol>
 {%for a in attendance%}
-
 
 	<li>
 	{{a.attendee.username}}
 	{{a.seats_booked}}
 	</li>
 
-
 {%endfor%}
 </ol>
 
+{%endif%}
 
 {% endblock content%}

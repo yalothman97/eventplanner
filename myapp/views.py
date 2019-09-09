@@ -5,9 +5,13 @@ from myapp.forms import UserSignup, UserLogin
 from django.contrib import messages
 from .models import Event, Attendance
 from .forms import EventForm, BookTicket
+import datetime
+from django.db.models import Q
+
 
 def home(request):
     return render(request, 'home.html')
+
 
 class Signup(View):
     form_class = UserSignup
@@ -49,7 +53,10 @@ class Login(View):
             if auth_user is not None:
                 login(request, auth_user)
                 messages.success(request, "Welcome Back!")
-                return redirect('dashboard')
+                if auth_user.is_authenticated:
+                    return redirect('dashboard')
+                else:
+                    return redirect('events')
             messages.warning(request, "Wrong email/password combination. Please try again.")
             return redirect("login")
         messages.warning(request, form.errors)
@@ -62,10 +69,8 @@ class Logout(View):
         messages.success(request, "You have successfully logged out.")
         return redirect("login")
 
+
 def dashboard(request):
-	if not request.user.is_staff:
-		messages.warning(request, "Access Denied. You need to be an event organizer.")
-		return redirect('home')
 	events = Event.objects.filter(organizer = request.user)
 	context = {
 		'events': events
@@ -75,7 +80,7 @@ def dashboard(request):
 
 def create_event(request):
 	form = EventForm()
-	if not request.user.is_staff:
+	if not request.user.is_authenticated:
 		messages.warning(request, "Access Denied. You need to be an event organizer.")
 		return redirect('home')
 	if request.method == "POST":
@@ -105,8 +110,8 @@ def event_detail(request, event_id):
 def update_event(request, event_id):
     event = Event.objects.get(id=event_id)
     form = EventForm(instance=event)
-    if not request.user.is_staff:
-        messages.warning(request, "Access Denied. You need to be an event organizer.")
+    if not request.user == event.organizer:
+        messages.warning(request, "Access Denied. You need to be the event organizer.")
         return redirect('home')
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
@@ -123,6 +128,9 @@ def update_event(request, event_id):
 
 def book_event(request,event_id):
     event = Event.objects.get(id=event_id)
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please Login to Book")
+        return redirect('login')
     form = BookTicket()
     if request.method == "POST":
         form = BookTicket(request.POST)
@@ -130,22 +138,53 @@ def book_event(request,event_id):
             booking=form.save(commit=False)
             booking.event=event
             booking.attendee=request.user
-            if booking.seats_booked>event.seats_available:
-                messages.warning(request, "Requested seats not available")
-                return redirect("book-event", event_id)
+            
+            seats_available=event.seats_available()
+            if seats_available<=0 :
+                messages.warning(request, "FULLY BOOKED!")
+                return redirect("event-detail", event_id)
 
-                # return redirect('home')
-
-            else:
-                event.seats_available -= booking.seats_booked
+            elif seats_available>=booking.seats_booked:
                 booking.save()
                 messages.success(request, "Seats Booked!")
                 return redirect("event-detail", event_id)
+            else:
+                messages.warning(request, "Requested seats not available")
+            #     return redirect("book-event", event_id)
+
+            # if booking.seats_booked>event.seats_available:
+            #     messages.warning(request, "Requested seats not available")
+            #     return redirect("book-event", event_id)
+
+            #     # return redirect('home')
+
+            # else:
+            #     event.seats_available -= booking.seats_booked
+            #     booking.save()
+            #     event.save()
+
+                # messages.success(request, "Seats Booked!")
+                # return redirect("event-detail", event_id)
+            
     context={
     'event':event,
     'form':form
     }                     
     return render(request,'book.html',context)
 
+def events_list(request):
+    events = Event.objects.filter(date__gte=datetime.date.today())
+
+    query = request.GET.get("q")
+    if query:
+        events = events.filter(Q(title__icontains=query)|
+            Q(description__icontains=query)|
+            Q(organizer__username__icontains=query)
+            ).distinct()
+
+    context = {
+        'events': events
+    }
+    return render(request, 'events.html', context)
 
 
