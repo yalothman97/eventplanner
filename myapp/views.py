@@ -8,7 +8,7 @@ from .forms import EventForm, BookTicket
 import datetime
 from django.db.models import Q
 from rest_framework.generics import ListAPIView, CreateAPIView
-from .serializers import EventListSerializer, UserCreateSerializer, UserLoginSerializer
+from .serializers import EventListSerializer, UserCreateSerializer, UserLoginSerializer, MyEventListSerializer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -225,9 +225,19 @@ class UserLoginAPIView(APIView):
         return Response(serializer.errors, HTTP_400_BAD_REQUEST)
 
 
-# class myEventsListView(ListAPIView):
-#     serializer_class = EventListSerializer
+class MyEventsListView(ListAPIView):
+    serializer_class = MyEventListSerializer
 
-#     def get_queryset(self):
-#         user = self.request.user
-#         return Event.objects.filter(organizer=user)
+    def get_queryset(self):
+        user = self.request.user
+        return Attendance.objects.filter(attendee=user)
+
+
+class GetAttendance(ListAPIView):
+    serializer_class = EventListSerializer
+
+    def get_queryset(self):
+        event = Event.objects.get(id=self.kwargs['event_id'])
+        # attendance=Attendance.objects.filter(event=event, many=True).data
+        return event.attendees.all
+

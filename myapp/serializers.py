@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from myapp.models import Event
+from myapp.models import Event, Attendance
 from django.contrib.auth.models import User
 from rest_framework_jwt.settings import api_settings
 
@@ -7,6 +7,12 @@ from rest_framework_jwt.settings import api_settings
 class EventListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
+        fields = '__all__'
+
+
+class MyEventListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
         fields = '__all__'
 
 

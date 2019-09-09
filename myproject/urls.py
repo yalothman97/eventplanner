@@ -18,11 +18,13 @@ urlpatterns = [
 	path('events/<int:event_id>/book/', views.book_event, name='book-event'),
 	path('events/', views.events_list, name='events'),
 	path('events/<int:event_id>/', views.event_detail, name='event-detail'),
-	path('lists/', views.EventListView.as_view()),
+	path('apievents/', views.EventListView.as_view()),
 	# path('token/', TokenObtainPairView.as_view(), name='token'),
-	path('myevents/', views.OrganizerListView.as_view()),
+	path('createdevents/', views.OrganizerListView.as_view()),
 	path('apiregister/', views.UserCreateAPIView.as_view()),
 	path('apilogin/', views.UserLoginAPIView.as_view()),
+	path('bookedevents/', views.MyEventsListView.as_view()),
+	path('getattend/<int:event_id>/', views.GetAttendance.as_view()),
 
 
 
