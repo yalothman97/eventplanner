@@ -15,26 +15,63 @@
                 {% endif %}
 
 
-                <div class=" mt-4">
-                        <p class="text-center"style="color: black">
-                                {{profile.person.username}}
-                          </p> 
-                        <p class="text-center"style="color: black">
-                              {{profile.bio}}
-                        </p> 
+                <div class="row  m-4">
+                    <div class="col-6">
+                            <p class="text-center col-6"style="color: black">
+                                    {{profile.person.username}}
+                                   
+                              </p> 
+                    </div>
                        
-                          <a class="btn" href="{% url 'profile' request.user.id %}">follow</a>
-                          <a class="btn" href="{% url 'profile' request.user.id %}">unfollow</a>
+                    <div class="col-auto">
+                            <form action="{% url 'profile' profile.person.id %}" method="POST">
+                                    <div class="form-row">
+                                        
+                                  <div class="col-auto m-2">
+                                  <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
+                                  </div>
+                                </div>
+                             
+                                </form>
+
+
+                                <form action="{% url 'profile' profile.person.id %}" method="POST">
+                                        <div class="form-row">
+                                           
+                                      <div class="col-auto m-2">
+                                      <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unFollow'>
+                                      </div>
+                                    </div>
+                                 
+                                    </form>       
+                    </div>
+
+                </div>
+                <div class="container col-12">
+                        <div class="row ">
+                                <p class="text-center"style="color: black">
+                                        {{profile.bio}}
+                                  </p> 
+                                  {% if request.user.id == profile.person.id %}
+                                  <a class="btn" href="{% url 'update-profile' request.user.id %}">Edit Profile</a>
+                                      
+                                  {% endif %}
+                        </div>
+
+                </div>
+                   
+                        
+                       
+
+                         
+                            
                           
-                          {% if request.user.id == profile.person.id %}
-                          <a class="btn" href="{% url 'update-profile' request.user.id %}">Edit Profile</a>
-                              
-                          {% endif %}
+                       
                               
          
 
       
-                  </div>
+                  
 
 
             </div>
