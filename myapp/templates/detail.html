@@ -11,6 +11,8 @@
     <h3 class="card-title" style="color: 000034;">{{event.location}}</h3>
     <h4 class="card-title" style="color: 000034;">{{event.seats_available}} on {{event.date}} - {{event.time}}</h4>
     <p class="card-text" style="color: 000034;">{{event.description}}</p>
+    <p class="card-text" style="color: 000034;">{{event.organizer}}</p>
+
 
 
     {%if request.user == event.organizer  %}
@@ -32,12 +34,13 @@
   </div>
 </div>
 
-{%if request.user.is_staff and request.user == event.organizer %}
+{%if  request.user == event.organizer %}
 
 <ol>
 {%for a in attendance%}
 
 	<li>
+    
 	{{a.attendee.username}}
 	{{a.seats_booked}}
 	</li>

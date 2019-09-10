@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from myapp.forms import UserSignup, UserLogin
+from myapp.forms import UserSignup, UserLogin,profileForm
 from django.contrib import messages
-from .models import Event, Attendance
+from .models import Event, Attendance,Profile
 from .forms import EventForm, BookTicket
 import datetime
 from django.db.models import Q
-from rest_framework.generics import ListAPIView, CreateAPIView
-from .serializers import EventListSerializer, UserCreateSerializer, UserLoginSerializer, MyEventListSerializer
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
+from rest_framework.generics import(ListAPIView, CreateAPIView,
+RetrieveUpdateAPIView)
+from .serializers import (EventListSerializer, UserCreateSerializer,
+EventAttendanceSerializer,CreateEventSerializer)
+from django.contrib.auth.models import User
+
 
 
 def home(request):
@@ -32,6 +33,7 @@ class Signup(View):
             user = form.save(commit=False)
             user.set_password(user.password)
             user.save()
+
             messages.success(request, "You have successfully signed up.")
             login(request, user)
             return redirect("home")
@@ -111,6 +113,37 @@ def event_detail(request, event_id):
     }
     return render(request, 'detail.html', context)
 
+def profile(request, user_id):
+    user=User.objects.get(id=user_id)
+    profile = Profile.objects.get(person=user)
+ 
+
+    context = {
+        "profile": profile,
+
+
+    }
+    return render(request, 'profile.html', context)
+
+
+def update_profile(request, user_id):
+    user=User.objects.get(id=user_id)
+    profile = Profile.objects.get(person=user)
+    form = profileForm(instance=profile)
+    if request.method == "POST":
+         form = profileForm(request.POST,request.FILES , instance=profile)
+         if form.is_valid():
+            form.save()
+            messages.success(request, "profile Updated Successfully")
+            return redirect("profile", user_id)
+
+    context = {
+        "profile": profile,
+        'form':form,
+
+    }
+    return render(request, 'updateProfile.html', context)
+
 
 def update_event(request, event_id):
     event = Event.objects.get(id=event_id)
@@ -143,33 +176,28 @@ def book_event(request,event_id):
             booking=form.save(commit=False)
             booking.event=event
             booking.attendee=request.user
-            
             seats_available=event.seats_available()
-            if seats_available<=0 :
+            if seats_available==0 :
                 messages.warning(request, "FULLY BOOKED!")
                 return redirect("event-detail", event_id)
 
             elif seats_available>=booking.seats_booked:
-                booking.save()
-                messages.success(request, "Seats Booked!")
+                
+                a= Attendance.objects.filter(attendee=request.user,event=event).first()
+                if a :
+                    a.seats_booked +=booking.seats_booked
+                    a.save()
+                    
+                
+                elif booking.seats_booked==0:
+                    messages.warning(request, "Please specify a number!")
+                    return redirect("book-event", event_id)
+                else:
+                    booking.save()
+                    messages.success(request, "Seats Booked!")
                 return redirect("event-detail", event_id)
             else:
                 messages.warning(request, "Requested seats not available")
-            #     return redirect("book-event", event_id)
-
-            # if booking.seats_booked>event.seats_available:
-            #     messages.warning(request, "Requested seats not available")
-            #     return redirect("book-event", event_id)
-
-            #     # return redirect('home')
-
-            # else:
-            #     event.seats_available -= booking.seats_booked
-            #     booking.save()
-            #     event.save()
-
-                # messages.success(request, "Seats Booked!")
-                # return redirect("event-detail", event_id)
             
     context={
     'event':event,
@@ -213,20 +241,9 @@ class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
 
 
-class UserLoginAPIView(APIView):
-    serializer_class = UserLoginSerializer
-
-    def post(self, request):
-        my_data = request.data
-        serializer = UserLoginSerializer(data=my_data)
-        if serializer.is_valid(raise_exception=True):
-            valid_data = serializer.data
-            return Response(valid_data, status=HTTP_200_OK)
-        return Response(serializer.errors, HTTP_400_BAD_REQUEST)
-
 
 class MyEventsListView(ListAPIView):
-    serializer_class = MyEventListSerializer
+    serializer_class = EventListSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -234,10 +251,23 @@ class MyEventsListView(ListAPIView):
 
 
 class GetAttendance(ListAPIView):
-    serializer_class = EventListSerializer
+    serializer_class = EventAttendanceSerializer
 
     def get_queryset(self):
         event = Event.objects.get(id=self.kwargs['event_id'])
-        # attendance=Attendance.objects.filter(event=event, many=True).data
-        return event.attendees.all
+        return event.attendees.all()
 
+
+
+
+
+class CreateEvent(CreateAPIView):
+    serializer_class = CreateEventSerializer
+    def perform_create(self, serializer):
+        serializer.save(organizer=self.request.user)
+
+class UpdateEvent(RetrieveUpdateAPIView):
+    queryset = Event.objects.all()
+    serializer_class = CreateEventSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'event_id'

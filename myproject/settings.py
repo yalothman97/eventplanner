@@ -51,8 +51,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     )
 }
 
@@ -61,9 +61,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
 }
 
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12),
-}
 
 
 MIDDLEWARE = [

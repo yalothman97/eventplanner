@@ -6,17 +6,38 @@
     <div class="container">
       <h1 class="masthead-heading mb-0">All the events,</h1>
       <h2 class="masthead-subheading mb-0">You could ever want...</h2>
-      {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
-      {% else %}
+
         <a href="{% url 'events' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
-      {% endif %}
+       
+       
+        <form action="{% url 'events' %}" method="GET">
+            <div class="form-row">
+                <div class="col-9 mt-4">
+          <input  class="form-control form-control-lg col-auto"type="text" name='q' placeholder="Search here..." value="{{request.GET.q}}">
+                </div>
+          <div class="col-auto m-2">
+          <input class="btn btn-secondary btn-xl rounded-pill " type="submit" value="Search">
+          </div>
+        </div>
+     
+        </form>
+
+       
     </div>
   </div>
+
+  
+
   <div class="bg-circle-1 bg-circle"></div>
   <div class="bg-circle-2 bg-circle"></div>
   <div class="bg-circle-3 bg-circle"></div>
   <div class="bg-circle-4 bg-circle"></div>
+
+
+
+  <div class="container" style="z-index: 999">
+
+  </div>
 </header>
 
 

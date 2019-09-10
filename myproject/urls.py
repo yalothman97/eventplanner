@@ -1,9 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+from django.conf.urls.static import static
 from myapp import views
 
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 urlpatterns = [
@@ -18,15 +23,28 @@ urlpatterns = [
 	path('events/<int:event_id>/book/', views.book_event, name='book-event'),
 	path('events/', views.events_list, name='events'),
 	path('events/<int:event_id>/', views.event_detail, name='event-detail'),
-	path('apievents/', views.EventListView.as_view()),
-	# path('token/', TokenObtainPairView.as_view(), name='token'),
-	path('createdevents/', views.OrganizerListView.as_view()),
-	path('apiregister/', views.UserCreateAPIView.as_view()),
-	path('apilogin/', views.UserLoginAPIView.as_view()),
-	path('bookedevents/', views.MyEventsListView.as_view()),
-	path('getattend/<int:event_id>/', views.GetAttendance.as_view()),
+	path('profile/<int:user_id>/', views.profile, name='profile'),
+	path('profile/<int:user_id>/update', views.update_profile, name='update-profile'),
+
+
+
+
+	path('api/login/', TokenObtainPairView.as_view(), name='token'),
+
+	path('api/events/', views.EventListView.as_view()),
+	path('api/myevents', views.OrganizerListView.as_view()),
+	path('api/register/', views.UserCreateAPIView.as_view()),
+	path('api/booked', views.MyEventsListView.as_view()),
+	path('api/<int:event_id>/attendance', views.GetAttendance.as_view()),
+	path('api/create/', views.CreateEvent.as_view()),
+	path('api/<int:event_id>/update', views.UpdateEvent.as_view()),
+	
+
 
 
 
 
 ]
+
+urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
