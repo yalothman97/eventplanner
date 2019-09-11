@@ -24,9 +24,10 @@ urlpatterns = [
 	path('events/', views.events_list, name='events'),
 	path('events/<int:event_id>/', views.event_detail, name='event-detail'),
 	path('profile/<int:user_id>/', views.profile, name='profile'),
-	path('profile/<int:user_id>/update', views.update_profile, name='update-profile'),
-	path('profile/<int:user_id>/following', views.get_following, name='following'),
-	path('profile/<int:user_id>/followers', views.get_followers, name='followers'),
+	path('profile/<int:user_id>/update/', views.update_profile, name='update-profile'),
+	path('profile/<int:user_id>/following/', views.get_following, name='following'),
+	path('profile/<int:user_id>/followers/', views.get_followers, name='followers'),
+
 
 
 
@@ -36,12 +37,16 @@ urlpatterns = [
 	path('api/login/', TokenObtainPairView.as_view(), name='token'),
 
 	path('api/events/', views.EventListView.as_view()),
-	path('api/myevents', views.OrganizerListView.as_view()),
+	path('api/myevents/<int:user_id>/', views.OrganizerListView.as_view()),
 	path('api/register/', views.UserCreateAPIView.as_view()),
-	path('api/booked', views.MyEventsListView.as_view()),
-	path('api/<int:event_id>/attendance', views.GetAttendance.as_view()),
+	path('api/booked/', views.MyEventsListView.as_view()),
+	path('api/<int:event_id>/attendance/', views.GetAttendance.as_view()),
 	path('api/create/', views.CreateEvent.as_view()),
-	path('api/<int:event_id>/update', views.UpdateEvent.as_view()),
+	path('api/<int:event_id>/update/', views.UpdateEvent.as_view()),
+	path('api/<int:event_id>/book/', views.BookEvent.as_view()),
+	path('api/<int:user_id>/follow/', views.FollowProfile.as_view()),
+	path('api/<int:user_id>/unfollow/', views.UnFollowProfile.as_view()),
+
 	
 
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from myapp.models import Event, Attendance,Profile,Connection
+from myapp.models import Event, Attendance, Profile, Connection
 from django.contrib.auth.models import User
 # from rest_framework_jwt.settings import api_settings
 
@@ -40,3 +40,14 @@ class CreateEventSerializer(serializers.ModelSerializer):
 	    model = Event
 	    exclude=['organizer']
 
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = ['seats_booked']
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connection
+        exclude = ['following','follower']

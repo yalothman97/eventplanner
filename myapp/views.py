@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from myapp.forms import UserSignup, UserLogin,profileForm
+from myapp.forms import UserSignup, UserLogin,ProfileForm
 from django.contrib import messages
 from .models import Event, Attendance,Profile,Connection
 from .forms import EventForm, BookTicket
 import datetime
 from django.db.models import Q
 from rest_framework.generics import(ListAPIView, CreateAPIView,
-RetrieveUpdateAPIView)
+RetrieveUpdateAPIView, DestroyAPIView)
 from .serializers import (EventListSerializer, UserCreateSerializer,
-EventAttendanceSerializer,CreateEventSerializer)
+EventAttendanceSerializer,CreateEventSerializer,BookingSerializer, FollowingSerializer)
 from django.contrib.auth.models import User
 
 
@@ -116,15 +116,26 @@ def event_detail(request, event_id):
 def profile(request, user_id):
     user=User.objects.get(id=user_id)
     profile = Profile.objects.get(person=user)
+    events = Event.objects.filter(organizer=user)
+    followers_of_user = Connection.objects.filter(following=user)
     if request.POST.get('follow'):
-        Connection.objects.create(following=user,follower=request.user)
+        try:
+            obj = Connection.objects.get(following=user, follower=request.user)
+        except Connection.DoesNotExist:
+            Connection.objects.create(following=user,follower=request.user)
+
     elif request.POST.get('unfollow'):
-        Connection.objects.get(following=user,follower=request.user).delete()
+        try:
+            obj = Connection.objects.get(following=user, follower=request.user)
+        except Connection.DoesNotExist:
+            Connection.objects.get(following=user,follower=request.user).delete()
 
  
 
     context = {
         "profile": profile,
+        "events": events,
+        "followers_of_user": followers_of_user
 
 
     }
@@ -134,12 +145,12 @@ def profile(request, user_id):
 def update_profile(request, user_id):
     user=User.objects.get(id=user_id)
     profile = Profile.objects.get(person=user)
-    form = profileForm(instance=profile)
+    form = ProfileForm(instance=profile)
     if request.method == "POST":
-         form = profileForm(request.POST,request.FILES , instance=profile)
+         form = ProfileForm(request.POST,request.FILES , instance=profile)
          if form.is_valid():
             form.save()
-            messages.success(request, "profile Updated Successfully")
+            messages.success(request, "Profile Updated Successfully")
             return redirect("profile", user_id)
 
     context = {
@@ -259,9 +270,10 @@ class EventListView(ListAPIView):
 class OrganizerListView(ListAPIView):
     serializer_class = EventListSerializer
 
+
     def get_queryset(self):
         user = self.request.user
-        return Event.objects.filter(organizer=user)
+        return Event.objects.filter(organizer_id=self.kwargs['user_id'])
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -271,7 +283,6 @@ class UserCreateAPIView(CreateAPIView):
 
 class MyEventsListView(ListAPIView):
     serializer_class = EventListSerializer
-
     def get_queryset(self):
         user = self.request.user
         return Attendance.objects.filter(attendee=user)
@@ -285,16 +296,39 @@ class GetAttendance(ListAPIView):
         return event.attendees.all()
 
 
-
-
-
 class CreateEvent(CreateAPIView):
     serializer_class = CreateEventSerializer
     def perform_create(self, serializer):
         serializer.save(organizer=self.request.user)
+
 
 class UpdateEvent(RetrieveUpdateAPIView):
     queryset = Event.objects.all()
     serializer_class = CreateEventSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'event_id'
+
+
+class BookEvent(CreateAPIView):
+    serializer_class = BookingSerializer
+    def perform_create(self, serializer):
+        serializer.save(event_id=self.kwargs['event_id'],attendee=self.request.user)
+
+
+class FollowProfile(CreateAPIView):
+    serializer_class = FollowingSerializer
+    def perform_create(self, serializer):
+        serializer.save(following_id=self.kwargs['user_id'],follower=self.request.user)
+
+
+class UnFollowProfile(DestroyAPIView):
+    serializer_class = FollowingSerializer
+    lookup_field = 'following_user_id'
+    lookup_url_kwarg = 'user_id'
+
+    def get_queryset(self):
+        queryset = Connection.objects.get(follower=self.request.user,following=self.kwargs['user_id'])
+        queryset.delete()
+        return queryset
+
+

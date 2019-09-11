@@ -33,7 +33,7 @@ class Attendance(models.Model):
 	event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendees')
 	
 	attendee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attended')
-	seats_booked = models.PositiveIntegerField(default=1)
+	seats_booked = models.PositiveIntegerField()
 
 	def __str__(self):
 		return "%s - %s" % (self.event, self.attendee)
@@ -49,11 +49,12 @@ class Connection(models.Model):
 
 
 class Profile(models.Model):
-	person = models.ForeignKey(User, on_delete=models.CASCADE,)
+	person = models.OneToOneField(User, on_delete=models.CASCADE,)
 	bio=models.CharField(max_length=280,blank=True)
 	img=models.ImageField(blank=True)
-	@receiver(post_save, sender=User)
-	def update_user_profile(sender, instance, created, **kwargs):
-		if created:
-			Profile.objects.create(person=instance).save()
+	
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+	if created:
+		Profile.objects.create(person=instance).save()
 			

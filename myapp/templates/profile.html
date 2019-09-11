@@ -5,86 +5,108 @@
 
 {% block content %}
     
-    <div class="container" style="margin-top: 7%">
-        <div class="row text-center">
-            <div class="col-12">
-                    {% if profile.img %}
-                    <img style="width: 150px;height: 150px; border-radius: 50%;" src="{{profile.img.url}}" >
+<div class="container" style="margin-top: 7%">
+    <div class="row text-center">
+        <div class="col-12">
+
+                {% if profile.img %}
+                <img style="width: 150px;height: 150px; border-radius: 50%;" src="{{profile.img.url}}" >
                 {% else %}
-                    <img style="width: 150px;height: 150px; border-radius: 50%;" src="{% static 'img/default-user.jpg' %}" alt="">
+                <img style="width: 150px;height: 150px; border-radius: 50%;" src="{% static 'img/default-user.jpg' %}" alt="">
                 {% endif %}
 
-
-                <div class="row  m-4">
-                    <div class="col-6">
-                            <p class="text-center col-6"style="color: black">
-                                    {{profile.person.username}}
-                                   
-                              </p> 
-                    </div>
-                       
-                    <div class="col-auto">
-                            <form action="{% url 'profile' profile.person.id %}" method="POST">
-                                    <div class="form-row">
-                                {% csrf_token %}
-                                        
-                                  <div class="col-auto m-2">
-                                  <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
-                                  </div>
-                                </div>
-                             
-                                </form>
+                    <div class="row  m-4">
+                        <h1 class="text-center col-12"style="color: black">
+                        {{profile.person.username.title}}
+                        </h1> 
 
 
-                                <form action="{% url 'profile' profile.person.id %}" method="POST">
-                                        <div class="form-row">
-                                {% csrf_token %}
-                                           
-                                      <div class="col-auto m-2">
-                                      <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unfollow'>
-                                      </div>
-                                    </div>
-                                 
-                                    </form>       
-                    </div>
-
-                </div>
-                <div class="container col-12">
-                        <div class="row ">
-                                <p class="text-center"style="color: black">
+                    <div class="container col-12">
+                                <h5 class="text-center"style="color: black">
                                         {{profile.bio}}
-                                  </p> 
+                                </h5> 
                                   {% if request.user.id == profile.person.id %}
-                                  <a class="btn" href="{% url 'update-profile' request.user.id %}">Edit Profile</a>
-                                      
+                                  <a class="btn" href="{% url 'update-profile' request.user.id %}">Edit Profile</a>  
                                   {% endif %}
-                        </div>
+                    </div>
+
+
+
+
+                           {%if request.user.id != profile.person.id %} 
+                            <div class="col-12">
+                             
+                              
+
+                              {% if request.user in followers_of_user %}
+
+
+                              <form action="{% url 'profile' profile.person.id %}" method="POST">
+                                <div class="form-row">
+                                 {% csrf_token %}
+                                    <div class="col-12 m-2">
+                                     <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unfollow'>
+                                    </div>
+                                </div>      
+                              </form>   
+
+
+                              {%else%}
+
+                               <form action="{% url 'profile' profile.person.id %}" method="POST">
+                               <div class="form-row">
+                                {% csrf_token %}
+                                  <div class="col-12 m-2">
+                                    <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
+                                  </div>
+                              </div>   
+                              </form>
+
+                             {% endif %}
+
+                            </div>
+                            {% endif %}
+
 
                 </div>
-                   
-                        
-                       
+                
 
-                         
-                            
-                          
-                       
-                              
-         
+              <div class="container">
 
-      
+                
                   
+                  <div class="row">
 
 
-            </div>
-            
-               
+                      {% for x in events %}
 
-        </div>
-          
-            
 
+                       <div class="col-5 m-3 text-center">
+                           <div class="card my-card">
+                               {# <img src="{{x.car_img.url}} alt="car""> #}
+                                 <div class="card-body">
+                                  <h5 class="card-title">{{x.title}} - {{x.date}} - {{x.time}}</h5>
+                                  <p class="card-text">{{x.seats_available}}</p>
+                                 </div>
+
+                                     <ul class="list-group list-group-flush">
+                                     <li class="list-group-item text-center">
+                                     <a href="{% url 'event-detail' x.id %}" class="btn btn-outline-dark">View</a>
+                                     </li>
+                                     </ul>
+                           </div>
+                       </div>
+
+
+                   {% endfor %}
+                 
+                   </div>
+              </div>
+
+
+        </div> 
     </div>
+</div>
 
 
 

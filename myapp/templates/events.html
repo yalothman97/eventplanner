@@ -3,10 +3,12 @@
 {% block content %}
 
 
-<header class="masthead text-center text-black">
-<div class="row">
+
+
+	<h1 style='color: white'>Browse Events</h1>
+<div class="row m-4">
 	{% for x in events %}
-	<div class="col-3  m-4 text-center">
+	<div class="col-4 mt-4 mb-4 text-center">
 		<div class="card my-card">
   		  {# <img src="{{x.car_img.url}} alt="car""> #}
   		  <div class="card-body">
@@ -22,6 +24,6 @@
  		</div>
     {% endfor %}
 </div>
-</header>
+
 
 {% endblock content%}

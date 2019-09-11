@@ -1,45 +1,51 @@
 {% extends "base.html" %}
 
-{% block content %}
-<header class="masthead text-center text-white">
-  <div class="masthead-content">
-    <div class="container">
-      <h1 class="masthead-heading mb-0">All the events,</h1>
-      <h2 class="masthead-subheading mb-0">You could ever want...</h2>
+{% block header %}
+<header>
 
-        <a href="{% url 'events' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
+<div class="container text-center mb-1">
+
+    <div class="text-center" style='margin-top: 180px'>
+      <h1>The door to all your events</h1>
+      <br>
+      <br>
+
        
        
         <form action="{% url 'events' %}" method="GET">
-            <div class="form-row">
-                <div class="col-9 mt-4">
-          <input  class="form-control form-control-lg col-auto"type="text" name='q' placeholder="Search here..." value="{{request.GET.q}}">
-                </div>
-          <div class="col-auto m-2">
-          <input class="btn btn-secondary btn-xl rounded-pill " type="submit" value="Search">
-          </div>
-        </div>
-     
+              <div class='align-item-center text-center row'>
+                  <div class="col-12">
+                  <input class="text-center form-control form-control-lg" type="text" name='q' placeholder="Search here..." value="{{request.GET.q}}">
+                  </div>
+
+                  <br>
+                  <br>
+                  <br>
+
+                  <div class="col-12 m-2">
+                  <input class="btn btn-primary btn-xl rounded-pill " type="submit" value="Search">
+
+                  <a href="{% url 'events' %}" class="btn btn-primary btn-xl rounded-pill">BROWSE EVENTS</a>
+                  </div>
+
+             </div>
         </form>
 
-       
+
     </div>
-  </div>
-
-  
-
-  <div class="bg-circle-1 bg-circle"></div>
-  <div class="bg-circle-2 bg-circle"></div>
-  <div class="bg-circle-3 bg-circle"></div>
-  <div class="bg-circle-4 bg-circle"></div>
 
 
+</div>
 
-  <div class="container" style="z-index: 999">
 
-  </div>
+<br>
+<br>
+
+
+<header class='masthead'>
+
 </header>
 
 
 
-{% endblock %}
+{% endblock header%}

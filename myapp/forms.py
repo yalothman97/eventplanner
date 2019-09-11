@@ -33,8 +33,12 @@ class BookTicket(forms.ModelForm):
 		model = Attendance
 		fields = ['seats_booked']
 
-class profileForm(forms.ModelForm):
+class ProfileForm(forms.ModelForm):
 	class Meta:
 		model=Profile
+		labels = {
+			'bio': 'Bio:',
+			'img': 'Upload Image:'
+		}
 		exclude=['person']
 
