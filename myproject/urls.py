@@ -25,6 +25,10 @@ urlpatterns = [
 	path('events/<int:event_id>/', views.event_detail, name='event-detail'),
 	path('profile/<int:user_id>/', views.profile, name='profile'),
 	path('profile/<int:user_id>/update', views.update_profile, name='update-profile'),
+	path('profile/<int:user_id>/following', views.get_following, name='following'),
+	path('profile/<int:user_id>/followers', views.get_followers, name='followers'),
+
+
 
 
 

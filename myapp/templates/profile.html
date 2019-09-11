@@ -26,6 +26,7 @@
                     <div class="col-auto">
                             <form action="{% url 'profile' profile.person.id %}" method="POST">
                                     <div class="form-row">
+                                {% csrf_token %}
                                         
                                   <div class="col-auto m-2">
                                   <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
@@ -37,9 +38,10 @@
 
                                 <form action="{% url 'profile' profile.person.id %}" method="POST">
                                         <div class="form-row">
+                                {% csrf_token %}
                                            
                                       <div class="col-auto m-2">
-                                      <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unFollow'>
+                                      <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unfollow'>
                                       </div>
                                     </div>
                                  

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views import View
 from myapp.forms import UserSignup, UserLogin,profileForm
 from django.contrib import messages
-from .models import Event, Attendance,Profile
+from .models import Event, Attendance,Profile,Connection
 from .forms import EventForm, BookTicket
 import datetime
 from django.db.models import Q
@@ -116,6 +116,11 @@ def event_detail(request, event_id):
 def profile(request, user_id):
     user=User.objects.get(id=user_id)
     profile = Profile.objects.get(person=user)
+    if request.POST.get('follow'):
+        Connection.objects.create(following=user,follower=request.user)
+    elif request.POST.get('unfollow'):
+        Connection.objects.get(following=user,follower=request.user).delete()
+
  
 
     context = {
@@ -143,6 +148,28 @@ def update_profile(request, user_id):
 
     }
     return render(request, 'updateProfile.html', context)
+
+
+def get_followers(request,user_id):
+    user=User.objects.get(id=user_id)
+    followers=Connection.objects.filter(following= user)
+    context={
+        'followers':followers,
+    }
+    return render(request, 'followers.html', context)
+
+
+def get_following(request,user_id):
+    user=User.objects.get(id=user_id)
+    following=Connection.objects.filter(follower = user)
+
+    
+    context={
+        'followings':following,
+    }
+    return render(request, 'following.html', context)
+
+
 
 
 def update_event(request, event_id):

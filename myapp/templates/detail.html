@@ -11,7 +11,9 @@
     <h3 class="card-title" style="color: 000034;">{{event.location}}</h3>
     <h4 class="card-title" style="color: 000034;">{{event.seats_available}} on {{event.date}} - {{event.time}}</h4>
     <p class="card-text" style="color: 000034;">{{event.description}}</p>
-    <p class="card-text" style="color: 000034;">{{event.organizer}}</p>
+    <p class="card-text" style="color: 000034;">
+    <a href="{% url 'profile' event.organizer.id %}"> {{event.organizer}}</a>  
+    </p>
 
 
 

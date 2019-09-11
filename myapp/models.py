@@ -42,15 +42,15 @@ class Attendance(models.Model):
 
 
 class Connection(models.Model):
-	following =models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-	follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+	following =models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+	follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
 
 
 
 
 class Profile(models.Model):
 	person = models.ForeignKey(User, on_delete=models.CASCADE,)
-	bio=models.CharField(max_length=280)
+	bio=models.CharField(max_length=280,blank=True)
 	img=models.ImageField(blank=True)
 	@receiver(post_save, sender=User)
 	def update_user_profile(sender, instance, created, **kwargs):

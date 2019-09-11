@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+    
+    {% for follower in  followers  %}
+   <h1>
+        {{follower.follower.username}}
+   </h1>
+        
+    {% endfor %}
+        
+{% endblock content %}
+    
