@@ -4,7 +4,7 @@
 {% block content %}
 	    
 	<br>
-	<div class="container " style="margin-top: 5%">
+	<div class="container col-lg-7 col-sm-10 mt-4 mb-4" style="margin-top: 5%">
 
 	        <form action="{% url 'update-event' event.id %}" method="POST" enctype="multipart/form-data">
 	            {% csrf_token %}
@@ -16,3 +16,7 @@
 
 
 {% endblock content%}
+
+
+
+<div>

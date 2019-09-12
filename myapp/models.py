@@ -33,6 +33,7 @@ class Attendance(models.Model):
 	event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendees')
 	
 	attendee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attended')
+	booked_on = models.DateField(auto_now=True )
 	seats_booked = models.PositiveIntegerField()
 
 	def __str__(self):

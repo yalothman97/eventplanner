@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg m-4 navbar-light fixed-top">
+<nav class="navbar navbar-expand-lg m-4 navbar-light">
 <div class="container">
 
 
@@ -26,13 +26,13 @@
         {% else %}
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'dashboard' %}">My Dashboard</a>
+          <a class="nav-link" style='color: #ef4439' href="{% url 'dashboard' %}">My Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+          <a class="nav-link"  style='color: #ef4439' href="{% url 'logout' %}">Log Out</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile' request.user.id %}">{{ request.user }}</a>
+          <a class="nav-link" style='color: #ef4439' href="{% url 'profile' request.user.id %}">{{ request.user }}</a>
         </li>
 
         {% endif %}

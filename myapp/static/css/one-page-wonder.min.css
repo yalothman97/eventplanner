@@ -1,15 +1,26 @@
 body{font-family:Sofia Pro}
 
 
-h1,h2,h3,h4,h5,h6{font-family:Sofia Pro;font-weight:600; color: #ef4439 ; !important}
+h1,h2,h3{font-family:Sofia Pro;font-weight:600; color: #ef4439 ; !important}
 
 a{font-family:Sofia Pro;font-weight:600; color: #ef4439}
 
+h4,h5,h6{font-family:Sofia Pro;font-weight:600;}
 
 .btn-xl{text-transform:uppercase;padding:1.5rem 3rem;font-size:.9rem;font-weight:700;letter-spacing:.1rem}
 
 
 .bg-black{background-color:#000!important}
+
+.numberCircle {
+    width: 54px;
+    line-height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 22px;
+    border: 2px solid #666;
+
+}
 
 
 .rounded-pill{border-radius:5rem}
@@ -25,6 +36,11 @@ a{font-family:Sofia Pro;font-weight:600; color: #ef4439}
 
 header.masthead{position:relative;overflow:hidden;padding-top:calc(7rem + 72px);
 		padding-bottom:7rem;background-image:url("../img/eventy-home.png");
+		background-repeat:no-repeat;background-position:center center;
+		background-attachment:scroll;background-size:contain}
+
+header.mastheadwhite{position:relative;overflow:hidden;padding-top:calc(2rem + 52px);
+		padding-bottom:7rem;
 		background-repeat:no-repeat;background-position:center center;
 		background-attachment:scroll;background-size:contain}
 

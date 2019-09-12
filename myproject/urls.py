@@ -27,6 +27,9 @@ urlpatterns = [
 	path('profile/<int:user_id>/update/', views.update_profile, name='update-profile'),
 	path('profile/<int:user_id>/following/', views.get_following, name='following'),
 	path('profile/<int:user_id>/followers/', views.get_followers, name='followers'),
+	path('dashboard/<int:event_id>/cancel/', views.cancel, name='cancel'),
+
+
 
 
 
@@ -39,7 +42,7 @@ urlpatterns = [
 	path('api/events/', views.EventListView.as_view()),
 	path('api/myevents/<int:user_id>/', views.OrganizerListView.as_view()),
 	path('api/register/', views.UserCreateAPIView.as_view()),
-	path('api/booked/', views.MyEventsListView.as_view()),
+	path('api/booked/', views.MyBookedEventsView.as_view()),
 	path('api/<int:event_id>/attendance/', views.GetAttendance.as_view()),
 	path('api/create/', views.CreateEvent.as_view()),
 	path('api/<int:event_id>/update/', views.UpdateEvent.as_view()),

@@ -4,19 +4,21 @@
 
 
 {% block content %}
-<div class="container text-center col-4" style="margin-top: 7%; background-color: blue">
+<div class="container text-center col-4" style="margin-top: 150px">
 
 
 
-    <form class='col-12 text-center' style="background-color: green" action="{% url 'update-profile' request.user.id  %}" method="POST" enctype="multipart/form-data">
+    <form class='col-12 text-center' action="{% url 'update-profile' request.user.id  %}" method="POST" enctype="multipart/form-data">
 
-                  <div class="form-row col-12 text-center" style="background-color: red">
+                  <div class="form-row col-12 text-center">
 
                       {% csrf_token %}
-                      <div class="col-12 text-center" style="background-color: yellow">
+                      <div class="col-12 text-center">
                          {{form|crispy}}
+                         {{form2|crispy}}
+
                 
-                      <input class="btn btn-secondary btn-xl rounded-pill " type="submit" value="Edit Profile">
+                      <input class="btn btn-primary btn-xl rounded-pill " type="submit" value="Edit Profile">
                       </div>
 
                   </div>

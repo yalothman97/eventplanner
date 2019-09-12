@@ -4,13 +4,30 @@
 
 
 {% block content %}
-    
-    {% for following in  followings  %}
-   <h1>
-        {{following.following.username}}
-   </h1>
-        
-    {% endfor %}
+    	
+
+    <div class='container text-center col-lg-4 col-sm-12' style='margin-top: 100px'>	
+    	<h1>Following</h1>
+    	<table class="table table-striped table-lights">
+				<tbody>
+					
+			{%for following in followings %}
+		
+				  <tr>
+				  	
+				  	<a class="nav-link"  href="{% url 'profile' following.following.id%}">
+					<td>{{following.following.username}}</td>
+				</a>
+
+				
+
+				
+				  </tr>
+				  {%endfor%}
+		
+				</tbody>
+		</table>
+	</div>
         
 {% endblock content %}
     

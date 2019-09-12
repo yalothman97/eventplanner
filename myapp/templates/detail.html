@@ -2,54 +2,79 @@
 
 {% block content %}
 
-<div class="card text-center" style="margin:70px">
-  <div class="card-header" style="background-color: #e3f2fd; color: 000034;">
-    Event Details
-  </div>
-  <div class="card-body">
-    <h2 class="card-title" style="color: 000034;">{{event.title}}</h2>
-    <h3 class="card-title" style="color: 000034;">{{event.location}}</h3>
-    <h4 class="card-title" style="color: 000034;">{{event.seats_available}} on {{event.date}} - {{event.time}}</h4>
-    <p class="card-text" style="color: 000034;">{{event.description}}</p>
-    <p class="card-text" style="color: 000034;">
-    <a href="{% url 'profile' event.organizer.id %}"> {{event.organizer}}</a>  
-    </p>
+<div class="card text-center" style="margin:160px">
+
+
+          <div class="card-header">
+           <font size="32" style='font-family:Sofia Pro;font-weight:600;color:#ef4439'>
+           Event Details</font>
+          </div>
+
+
+      <div class="card-body">
+        <font size="72" style='font-family:Sofia Pro;font-weight:800;color:#ef4439'>{{event.title.title}}</font>
+        <h3 class="card-title" style="color: 000034;">At {{event.location.title}}</h3>
+        <font  style="color: #3f3f3f;">{{event.date}} on {{event.time}}</font>
+        <p class="card-text" style="color: #3f3f3f;">{{event.description}}</p>
+        <p class="card-text" style="color: 000034;">
+        <a href="{% url 'profile' event.organizer.id %}">By {{event.organizer}}</a>  
+        <p>{{event.seats_available}} Seats Available</p>
+        </p>
 
 
 
-    {%if request.user == event.organizer  %}
-    <a href="{% url 'update-event' event.id %}"><button>Update</button></a>
-    {%endif%}
-    
-    {% if event.seats_available > 0 %}
-    <a href="{% url 'book-event' event.id %}"><button>Book Event</button></a>
-    {%else%}
-    <button disabled="True">Book Event </button>
-    <br>
-    <br>
-    <br>
-    <h2 style="color:red" >FULLY BOOKED</h2>
+                {%if request.user == event.organizer  %}
+                       <a href="{% url 'update-event' event.id %}" class="btn btn-outline-dark">Update</a>
+                {%endif%}
+                
 
-  
-    {%endif%}
+                {% if event.seats_available > 0 %}
 
-  </div>
+
+                    <a href="{% url 'book-event' event.id %}" class="btn btn-outline-dark">Book Event</a>
+                    {%else%}
+                    <a disabled='True' class="btn btn-outline-light">Fully Booked</a>
+                    <br>
+                    <br>
+                    <br>
+                    <font size="72" style='font-family:Sofia Pro;font-weight:600;color:red'>FULLY BOOKED</font>
+
+              
+                {%endif%}
+
+      </div>
 </div>
+
 
 {%if  request.user == event.organizer %}
 
-<ol>
-{%for a in attendance%}
+            <div class='container text-center'>
+                <h1>Attendees</h1>
+                    <table class="table table-striped table-dark">
+                        
+                            <thead>
+                              <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Seats</th>
+                              </tr>
+                            </thead>
 
-	<li>
-    
-	{{a.attendee.username}}
-	{{a.seats_booked}}
-	</li>
+                            <tbody>
+                                    {%for a in attendance %}
+                    
+                              <tr>
+                                <td>{{a.attendee.username}}</td>
+                                <td>{{a.seats_booked}}</td>
+                              </tr>
 
-{%endfor%}
-</ol>
+                                    {%endfor%}
+                            </tbody>
+                     </table>
+            </div>
 
 {%endif%}
+
+
+
 
 {% endblock content%}

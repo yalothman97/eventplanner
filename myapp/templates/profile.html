@@ -22,12 +22,14 @@
 
 
                     <div class="container col-12">
-                                <h5 class="text-center"style="color: black">
-                                        {{profile.bio}}
-                                </h5> 
+                                <h5 class="text-center"style="color: black">{{profile.bio}}</h5> 
                                   {% if request.user.id == profile.person.id %}
                                   <a class="btn" href="{% url 'update-profile' request.user.id %}">Edit Profile</a>  
                                   {% endif %}
+                                  <div>
+                                  <a class="btn-primary btn-lg rounded-pill" href="{% url 'followers' profile.person.id %}">Followers</a>
+                                  <a class="btn-primary btn-lg rounded-pill" href="{% url 'following' profile.person.id%}">Following</a>
+                                  </div>
                     </div>
 
 
@@ -37,32 +39,36 @@
                             <div class="col-12">
                              
                               
-
-                              {% if request.user in followers_of_user %}
+                              
+                              {% if followers_of_user %}
 
 
                               <form action="{% url 'profile' profile.person.id %}" method="POST">
                                 <div class="form-row">
                                  {% csrf_token %}
                                     <div class="col-12 m-2">
-                                     <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="unFollow" name='unfollow'>
+                                     <input class="btn btn-primary btn-sm rounded-pill " type="submit" value="Unfollow" name='Unfollow'>
                                     </div>
                                 </div>      
                               </form>   
 
 
-                              {%else%}
-
+                             {% endif %}
+                              
+                              {% if followers_of_user == False %}
+                    
                                <form action="{% url 'profile' profile.person.id %}" method="POST">
                                <div class="form-row">
                                 {% csrf_token %}
                                   <div class="col-12 m-2">
-                                    <input class="btn btn-secondary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
+                                    <input class="btn btn-primary btn-sm rounded-pill " type="submit" value="Follow" name="follow">
                                   </div>
                               </div>   
                               </form>
-
                              {% endif %}
+
+
+
 
                             </div>
                             {% endif %}
@@ -71,22 +77,24 @@
                 </div>
                 
 
-              <div class="container">
+             
 
                 
                   
-                  <div class="row">
+                  <div class="container">
+                    <div class='row'>
 
 
                       {% for x in events %}
 
 
-                       <div class="col-5 m-3 text-center">
+                       <div class="col-lg-4 col-sm-12 mt-4 mb-4 text-center">
                            <div class="card my-card">
                                {# <img src="{{x.car_img.url}} alt="car""> #}
                                  <div class="card-body">
-                                  <h5 class="card-title">{{x.title}} - {{x.date}} - {{x.time}}</h5>
-                                  <p class="card-text">{{x.seats_available}}</p>
+                                  <h3 class="card-title">{{x.title}}</h3>
+                                  <font>{{x.date}}</font>
+                                  <p class="card-text">{{x.seats_available}} Seats</p>
                                  </div>
 
                                      <ul class="list-group list-group-flush">
@@ -99,9 +107,10 @@
 
 
                    {% endfor %}
-                 
+
+                    </div>
                    </div>
-              </div>
+            
 
 
         </div> 

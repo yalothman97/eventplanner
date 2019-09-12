@@ -34,6 +34,7 @@ class BookTicket(forms.ModelForm):
 		fields = ['seats_booked']
 
 class ProfileForm(forms.ModelForm):
+
 	class Meta:
 		model=Profile
 		labels = {

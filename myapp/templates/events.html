@@ -3,17 +3,18 @@
 {% block content %}
 
 
-
-
-	<h1 style='color: white'>Browse Events</h1>
-<div class="row m-4">
+<div class='container text-center' style='margin-top: 80px'>
+<div class="row">
 	{% for x in events %}
-	<div class="col-4 mt-4 mb-4 text-center">
+	<div class="col-lg-4 col-sm-12 mt-4 mb-4 text-center">
 		<div class="card my-card">
   		  {# <img src="{{x.car_img.url}} alt="car""> #}
   		  <div class="card-body">
-	    	  <h5 class="card-title">{{x.title}} - {{x.date}} - {{x.time}}</h5>
-			  <p class="card-text">{{x.seats_available}}</p>
+	    	  <h1 class="card-title">{{x.title}}</h1>
+	    	  <h3 class='card-text'>{{x.date}} - {{x.time}}</h3>
+	    	  <font class="badge badge-pill badge-light m-2" style='font-size:28px'>{{x.seats_available}}</font> 
+	    	  <p>Seats Available</p>
+
 		    </div>
 		  <ul class="list-group list-group-flush">
 			<li class="list-group-item text-center">
@@ -24,6 +25,6 @@
  		</div>
     {% endfor %}
 </div>
-
+</div>
 
 {% endblock content%}
